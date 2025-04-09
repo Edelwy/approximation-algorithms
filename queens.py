@@ -2,19 +2,19 @@ from pysat.formula import CNF
 from pysat.solvers import Glucose3
 
 PRINT_CNF = 0
-PRINT_SOLUTION = 0
+PRINT_SOLUTION = 1
 
 # Variables are presented as xij where row is the row and column the column.
 # Since this cannot be the case with CNF we use a function to represent it linearly. 
-def lin(n, row, column):
+def lin(n: int, row: int, column: int) -> int:
     return n*row + column + 1
 
-def valid(n, row, column):
+def valid(n: int, row: int, column: int) -> bool:
     if row < 0 or row >= n or column < 0 or column >= n:
         return False
     return True
 
-def one_per_clause(n, cnf, clauses):
+def one_per_clause(n: int, cnf: CNF, clauses: list) -> None:
     for row, clause_1 in enumerate(clauses):
         for clause_2 in clauses[row + 1:]:
             cnf.append([-clause_1, -clause_2])
