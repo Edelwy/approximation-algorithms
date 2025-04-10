@@ -109,6 +109,5 @@ def get_solution(n, k):
     return solver.get_model()
 
 if __name__ == "__main__":
-    n = 8
-    find_max(n)
+    get_solution(8, 21)
     
