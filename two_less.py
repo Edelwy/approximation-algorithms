@@ -47,8 +47,9 @@ def greater(tuple1: tuple, tuple2: tuple):
 
 # Constraints if tuple 2 is not greater than tuple 1.
 def not_consecutive(cnf: CNF, n: int, k: int, tuple1: tuple, tuple2: tuple) -> list:
-    for i in range(k - 1):
-        cnf.append([-lin(n, *tuple1, i), -lin(n, *tuple2, i + 1)])
+    for i in range(k):
+        for j in range(i):
+            cnf.append([-lin(n, *tuple1, j), -lin(n, *tuple2, i)])
 
 def one_per_clause(cnf: CNF, clauses: list) -> None:
     for row, clause1 in enumerate(clauses):
@@ -90,12 +91,13 @@ def generate_CNF(n: int, k: int) -> CNF:
     return cnf
 
 def find_max(n):
-    for k in range(n**3 - 1, -1, -1):
+    max_solution = None
+    for k in range(n, n**3):
         solution = get_solution(n, k)
         if not solution:
-            continue
-        print(f"Solution: {translate(n, solution)}")
-        break
+            break
+        max_solution = solution
+    print(translate(n, max_solution))
 
 def get_solution(n, k):
     cnf = generate_CNF(n, k)
@@ -107,6 +109,6 @@ def get_solution(n, k):
     return solver.get_model()
 
 if __name__ == "__main__":
-    n = 3
+    n = 8
     find_max(n)
     
