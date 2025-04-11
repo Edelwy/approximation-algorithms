@@ -1,3 +1,8 @@
+# Author: Nina Mislej
+# Date created: 9. 4. 2025
+# Whole project available at: 
+# https://github.com/Edelwy/approximation-algorithms/
+
 from pysat.formula import CNF
 from pysat.solvers import Glucose3
 
@@ -56,7 +61,7 @@ def generate_CNF(n: int) -> CNF:
         
     return cnf
 
-def get_solution(n):
+def get_solution(n: int) -> None | list[int]:
     cnf = generate_CNF(n)
     if PRINT_CNF: 
         print(cnf.to_dimacs())

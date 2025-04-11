@@ -1,5 +1,10 @@
+# Author: Nina Mislej
+# Date created: 10. 4. 2025
+# Whole project available at: 
+# https://github.com/Edelwy/approximation-algorithms/
+
 from pysat.formula import CNF
-from pysat.solvers import Glucose3
+from pysat.solvers import Cadical195
 
 PRINT_CNF = 0 # Print the CNF obtained.
 PRINT_SOLUTION = 0 # Print the solution obtained.
@@ -14,7 +19,7 @@ def lin(n: int, a: int, b: int, c: int, i: int) -> int:
         return i * n**3 + a * n**2 + b * n + c + 1  
     return int(f"{a}{b}{c}{i}")
 
-def decode(n, var):
+def decode(n: int, var: int) -> tuple:
     var = var - 1
     c = var % n
     var = var // n
@@ -34,7 +39,7 @@ def translate(n: int, solution: list[int] ) -> dict[tuple]:
     return translation
 
 # Returns true if tuple 2 is greater than tuple 1.
-def greater(tuple1: tuple, tuple2: tuple):
+def greater(tuple1: tuple, tuple2: tuple) -> bool:
     a, b, c = tuple1
     x, y, z = tuple2
     if x > a and y > b:
@@ -90,24 +95,19 @@ def generate_CNF(n: int, k: int) -> CNF:
                 not_consecutive(cnf, n, k, tuple1, tuple2)
     return cnf
 
-def find_max(n):
-    max_solution = None
-    for k in range(n, n**3):
-        solution = get_solution(n, k)
-        if not solution:
-            break
-        max_solution = solution
-    print(translate(n, max_solution))
-
-def get_solution(n, k):
+def get_solution(n: int, k: int) -> None | list[int]:
     cnf = generate_CNF(n, k)
     if PRINT_CNF: 
         print(cnf.to_dimacs())
-    solver = Glucose3()
+    solver = Cadical195()
     solver.append_formula(cnf)
     solver.solve()
     return solver.get_model()
 
 if __name__ == "__main__":
-    get_solution(8, 21)
+    n = 7
+    k = 17
+    solution = get_solution(n, k)
+    if PRINT_SOLUTION: 
+        print(f"Solvable: {translate(n, solution)}") if solution else print("Unslovable")
     

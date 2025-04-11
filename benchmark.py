@@ -1,3 +1,8 @@
+# Author: Nina Mislej
+# Date created: 10. 4. 2025
+# Whole project available at: 
+# https://github.com/Edelwy/approximation-algorithms/
+
 from two_less import get_solution, translate
 import signal
 import re
@@ -5,8 +10,8 @@ import re
 # 1 minute timeout.
 TIMEOUT = 30 * 60
 MAX_TIMEOUTS = 6
-MAX_N = 15
-MIN_N = 7
+MAX_N = 6
+MIN_N = 2
 
 # Benchmark results.
 FILENAME = "./results.txt"
@@ -53,10 +58,8 @@ def run_with_timeout(timeout, func, *args, **kwargs):
     signal.alarm(0) 
     return result
 
-def write_result(filename, unsat, n, solution):
-    if not solution:
-        return n
-    formatted_result = format_result(unsat, max_solution)
+def write_result(filename, prefix, n, solution):
+    formatted_result = format_result(prefix, solution)
     append_to_file(filename, formatted_result, n)
     print(f"Written result for {n}.")
     return solution[0]
@@ -86,5 +89,7 @@ if __name__ == "__main__":
             prefix = "INTERRUPT"
             break
         finally:
-            lower_bound = write_result(FILENAME, prefix, n, max_solution)
+            lower_bound = n + 1
+            if max_solution:
+                lower_bound = write_result(FILENAME, prefix, n, max_solution)
             print(f"Loop {n} done.")
