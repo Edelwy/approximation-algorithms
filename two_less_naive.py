@@ -6,8 +6,8 @@
 from pysat.formula import CNF
 from pysat.solvers import Cadical195
 
-PRINT_CNF = 0 # Print the CNF obtained.
-PRINT_SOLUTION = 0 # Print the solution obtained.
+PRINT_CNF = 1 # Print the CNF obtained.
+PRINT_SOLUTION = 1 # Print the solution obtained.
 PRINT_TRANSLATION = 1 # Print the translated solution to readable output.
 LINEAR_VARIABLES = 1 # Use linear variables vs. concated variables.
 
@@ -51,7 +51,7 @@ def greater(tuple1: tuple, tuple2: tuple) -> bool:
     return False
 
 # Constraints if tuple 2 is not greater than tuple 1.
-def not_consecutive(cnf: CNF, n: int, k: int, tuple1: tuple, tuple2: tuple) -> list:
+def not_before(cnf: CNF, n: int, k: int, tuple1: tuple, tuple2: tuple) -> list:
     for i in range(k):
         for j in range(i):
             cnf.append([-lin(n, *tuple1, j), -lin(n, *tuple2, i)])
@@ -81,6 +81,8 @@ def generate_CNF(n: int, k: int) -> CNF:
         one_per_clause(cnf, chain_constraint)
 
     # One tuple can be in at most one position.
+    # Could be thrown out due to the 2-less condition.
+    # Left here to improve readability as it does not change the CNF drastically.
     for three_tuple in tuples:
         tuple_constraint = []
         for i in range(k):
@@ -92,7 +94,7 @@ def generate_CNF(n: int, k: int) -> CNF:
     for tuple1 in tuples:
         for tuple2 in tuples:
             if not greater(tuple1, tuple2):
-                not_consecutive(cnf, n, k, tuple1, tuple2)
+                not_before(cnf, n, k, tuple1, tuple2)
     return cnf
 
 def get_solution(n: int, k: int) -> None | list[int]:
@@ -106,7 +108,7 @@ def get_solution(n: int, k: int) -> None | list[int]:
 
 if __name__ == "__main__":
     n = 7
-    k = 17
+    k = 18
     solution = get_solution(n, k)
     if PRINT_SOLUTION: 
         print(f"Solvable: {translate(n, solution)}") if solution else print("Unslovable")

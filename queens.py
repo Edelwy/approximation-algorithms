@@ -6,7 +6,7 @@
 from pysat.formula import CNF
 from pysat.solvers import Glucose3
 
-PRINT_CNF = 0 # Print the CNF obtained.
+PRINT_CNF = 1 # Print the CNF obtained.
 PRINT_SOLUTION = 1 # Print the solution obtained.
 LINEAR_VARIABLES = 1 # Use linear variables vs. concated variables.
 
