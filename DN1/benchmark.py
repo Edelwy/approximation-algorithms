@@ -3,7 +3,7 @@
 # Whole project available at: 
 # https://github.com/Edelwy/approximation-algorithms/
 
-from two_less import get_solution, translate
+from two_less_naive import get_solution, translate
 import signal
 import re
 
