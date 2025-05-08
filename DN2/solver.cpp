@@ -72,15 +72,12 @@ bool CSolver::solveDYN( int n, int k, const std::vector<int>& numbers )
 
 bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
 {
-    auto sortedNumbers = numbers;
-    std::sort(sortedNumbers.begin(), sortedNumbers.end());
-
     std::set<int> sums = {0};
     for ( int i = 1; i < n; i++ ) {
         auto currSums = sums;
 
         for ( const auto element : currSums ) {
-            auto newElement = element + sortedNumbers.at(i);
+            auto newElement = element + numbers.at(i);
             if ( newElement <= k )
                 sums.insert(newElement);
         }
@@ -93,9 +90,12 @@ bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
 
 bool CSolver::solveGRDY( int n, int k, const std::vector<int>& numbers )
 {
+    auto sortedNumbers = numbers;
+    std::sort(sortedNumbers.begin(), sortedNumbers.end());
+
     int solution = 0;
     for ( int i = 0; i < n; i++ ) {
-        const auto& element = numbers.at( i );
+        const auto& element = sortedNumbers.at( i );
         if (k - solution >= element )
             solution += element;
     }
