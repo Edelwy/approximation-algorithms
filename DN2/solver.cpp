@@ -93,19 +93,45 @@ bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
 
 bool CSolver::solveGRDY( int n, int k, const std::vector<int>& numbers )
 {
-    int target = 0;
+    int solution = 0;
     for ( int i = 0; i < n; i++ ) {
         const auto& element = numbers.at( i );
-        if (k - target >= element )
-            target += element;
+        if (k - solution >= element )
+            solution += element;
     }
-    auto approx = fmt::format( "The approximation for {} is {}.\n", k, target );
-    approx += fmt::format( "Difference is {}.\n", k - target );
+    auto approx = fmt::format( "The approximation for {} is {}.\n", k, solution );
+    approx += fmt::format( "Difference is {}.\n", k - solution );
     std::cout << approx;
-    return target == k;
+    return solution == k;
 }  
 
 bool CSolver::solveFPTAS( int n, int k, const std::vector<int>& numbers )
 {
-    return {};
+    auto sortedNumbers = numbers;
+    std::sort(sortedNumbers.begin(), sortedNumbers.end());
+    auto delta = mEpsilon / (2 * n);
+
+    std::set<int> sums = {0};
+    for ( int i = 1; i < n; i++ ) {
+        auto tmpSums = sums;
+
+        for ( const auto element : tmpSums ) 
+            sums.insert( element + sortedNumbers.at(i) );
+
+        auto last = *sums.begin();
+        tmpSums = { last };
+        for ( auto& element : sums ) {
+            if( element <= k && element > last * ( 1 + delta ) ) {
+                tmpSums.insert( element );
+                last = element;
+            }
+        }
+        sums = tmpSums;
+    }
+
+    auto solution = *sums.rbegin();
+    auto approx = fmt::format( "The approximation for {} is {} with epsilon {}.\n", k, solution, mEpsilon );
+    approx += fmt::format( "Difference is {}.\n", k - solution );
+    std::cout << approx;
+    return solution == k;
 }  

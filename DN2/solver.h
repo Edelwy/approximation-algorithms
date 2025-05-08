@@ -12,7 +12,7 @@ enum class EMode {
 };
 
 class CSolver {
-        double mEpsilon = 0.05;
+        double mEpsilon = 0.2;
     public:
         CSolver() = default;
         CSolver(double epsilon);
