@@ -3,6 +3,14 @@
 #include "pch.h"
 #include <fmt/core.h>
 
+CSolver::CSolver( double epsilon ) 
+    : mEpsilon(epsilon){};
+
+void CSolver::setEpsilon( double epsilon ) 
+{
+    mEpsilon = epsilon;
+}
+
 bool CSolver::solve( const std::filesystem::path& path, EMode mode )
 {
     int n, k;

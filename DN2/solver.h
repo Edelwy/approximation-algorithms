@@ -12,7 +12,13 @@ enum class EMode {
 };
 
 class CSolver {
+        double mEpsilon = 0.05;
     public:
+        CSolver() = default;
+        CSolver(double epsilon);
+
+        void setEpsilon( double epsilon );
+
         bool solve( const std::filesystem::path& path, EMode mode );
     
     private:
