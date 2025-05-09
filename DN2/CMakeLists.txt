@@ -38,11 +38,25 @@ FetchContent_MakeAvailable(FMT)
 message("FMT library successfully fetched.")
 
 # Adding executables and adding the external libraries.
-message("Adding DYN Subset Sum Solver executable.")
+message("Adding Subset Sum Solver executable.")
 add_executable(solver.out 
     solverCli.cpp 
     options.cpp
-    solver.cpp)
+    solver.cpp
+    timer.cpp
+    path.cpp)
 target_link_libraries(solver.out PRIVATE CLI11::CLI11)
 target_link_libraries(solver.out PRIVATE fmt::fmt)
 target_precompile_headers(solver.out PRIVATE pch.h)
+
+message("Adding Subset Sum Benchmark executable.")
+add_executable(benchmark.out 
+    benchmarkCli.cpp 
+    benchmark.cpp
+    options.cpp
+    solver.cpp
+    timer.cpp
+    path.cpp)
+target_link_libraries(benchmark.out PRIVATE CLI11::CLI11)
+target_link_libraries(benchmark.out PRIVATE fmt::fmt)
+target_precompile_headers(benchmark.out PRIVATE pch.h)

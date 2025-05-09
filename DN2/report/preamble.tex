@@ -25,6 +25,7 @@
 \usepackage{titlesec}
 \usepackage{minted} % For code highlights ect.
 \usepackage{fontspec}
+\usepackage{makecell}
 
 \setmonofont{DejaVu Sans Mono}[Scale=0.90] % Or Consolas, JetBrains Mono, Source Code Pro, etc.
 
@@ -39,10 +40,12 @@
 
 % Environment for mint.
 \BeforeBeginEnvironment{minted}{
+  \begingroup
   \setlength{\parskip}{0pt}
   \setlength{\topsep}{0pt}
   \setlength{\partopsep}{0pt}
 }
+\AfterEndEnvironment{minted}{\endgroup}
 
 % Hyperlink settup.
 \hypersetup{

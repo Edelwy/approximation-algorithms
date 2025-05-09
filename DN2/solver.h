@@ -32,6 +32,8 @@ class CSolver {
 
         void setEpsilon( double epsilon );
 
+        double getEpsilon();
+
         std::optional<CResult> result();
 
         bool solve( const std::filesystem::path& path, EMode mode );

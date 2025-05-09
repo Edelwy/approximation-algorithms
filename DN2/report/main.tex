@@ -131,6 +131,47 @@ All four algorithms are functions of the \texttt{Solver} class. Which algorithm 
   enum class EMode { DYN = 1, EXH = 2, GRDY = 3, FPTAS = 4 };
 \end{minted}
 
+\pagebreak
+
+\section{Testing on Public Test Cases}
+
+Firstly let us examine the performance of all four algorithms for the public test cases provided in \href{https://ucilnica.fri.uni-lj.si/mod/assign/view.php?id=32883}{spletna učilnica}. I implemented a \texttt{Benchmark} class available in the repository that times the performance. The $\epsilon$ value was $0.2$ for the fourth algorithm. There exists a \textbf{feasable folution} for every test case. 
+
+\begin{figure}[!hbpt]
+    \begin{minipage}{0.64\textwidth}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|l|c|c|c|c|} \hline
+                \cellcolor{blue!20} & \multicolumn{4}{c|}{\cellcolor{blue!20}\texttt{time}} \\ \cline{2-5}
+                \cellcolor{blue!20} \texttt{test} & \texttt{DYN} & \texttt{EXH} & \texttt{GRDY} & \texttt{FPTAS} \\ \hline
+                \makecell[l]{ \texttt{n = 100} \\ \texttt{k = 200}} & 0.00003 & 0.00362 & 0.00001 & \cellcolor{red!20}{0.00895} \\ \hline
+                \makecell[l]{ \texttt{n = 50} \\ \texttt{k = 200000}} & 0.00992 & \cellcolor{red!20}{1.14751} & 0.00001 & 0.02338 \\ \hline
+                \makecell[l]{ \texttt{n = 500} \\ \texttt{k = 2000}} & 0.00020 & 0.25861 & 0.00006 & \cellcolor{red!20}{0.60971} \\ \hline
+                \makecell[l]{ \texttt{n = 40} \\ \texttt{k = 1230000}} & 0.04424 & \cellcolor{red!20}{7.79745} & 0.00001 & 0.01751 \\ \hline
+                \makecell[l]{ \texttt{n = 1000} \\ \texttt{k = 72000}} & 0.06364 & \cellcolor{red!20}{25.26750} & 0.00013 & 21.36842 \\ \hline
+            \end{tabular}
+            \caption{Time in seconds for the public test cases.}
+        \end{table}
+    \end{minipage}
+    \begin{minipage}{0.35\textwidth}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|l|c|c|} \hline
+                \cellcolor{blue!20} & \multicolumn{2}{c|}{\cellcolor{blue!20}\texttt{difference}} \\ \cline{2-3}
+                \cellcolor{blue!20} \texttt{test} & \texttt{GRDY} & \texttt{FPTAS} \\ \hline
+                \makecell[l]{ \texttt{n = 100} \\ \texttt{k = 200}}  & \cellcolor{red!20}{4} & 0 \\ \hline
+                \makecell[l]{ \texttt{n = 50} \\ \texttt{k = 200000}} &  \cellcolor{red!20}{19516} & 337 \\ \hline
+                \makecell[l]{ \texttt{n = 500} \\ \texttt{k = 2000}} &  \cellcolor{red!20}{34} & 0 \\ \hline
+                \makecell[l]{ \texttt{n = 40} \\ \texttt{k = 1230000}} &  \cellcolor{red!20}{33687} & 4 \\ \hline
+                \makecell[l]{ \texttt{n = 1000} \\ \texttt{k = 72000}} & \cellcolor{red!20}{897} & 7 \\ \hline
+            \end{tabular}
+            \caption{Difference from $k$.}
+        \end{table} 
+    \end{minipage}  
+\end{figure}
+
+The red cells represent the longest running time. The first case was easily solveble by all algorithms with time being \textbf{under a second}. The \textbf{dynamic programming} approach performed drastically better than the \textbf{exhaustive search} in terms of finding an optimal solution. It even performed better than the \textbf{FPTAS} algorithm in most cases. While the greedy algorithm performed better timewise, it did perform a lot worse in terms of approximation.
+
 \section{Test Case Generation for Hard Scenarios}
 
 

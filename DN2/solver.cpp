@@ -13,6 +13,11 @@ void CSolver::setEpsilon( double epsilon )
     mEpsilon = epsilon;
 }
 
+double CSolver::getEpsilon() 
+{
+    return mEpsilon;
+}
+
 std::optional<CResult> CSolver::result()
 {
     return mResult;

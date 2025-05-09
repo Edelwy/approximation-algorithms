@@ -9,7 +9,7 @@ class COptions {
         COptions(const std::string& name, int argc, char** argv);
         std::filesystem::path mPath;
         std::optional<double> moEpsilon;
-        int mMode;
+        int mMode = 1;
         bool mGenerate = false;
 
     private:

@@ -19,7 +19,7 @@ void CBenchmark::setEpsilon( double epsilon )
     mSolver.setEpsilon( epsilon );
 }
 
-bool CBenchmark::start( const std::filesystem::path& path )
+void CBenchmark::start( const std::filesystem::path& path )
 {
     for ( const auto& path : CPath::paths( path ) ) {
         auto oName = CPath::name( path );
@@ -55,7 +55,7 @@ bool CBenchmark::generate( const std::filesystem::path& path )
 
 bool CBenchmark::clean( const std::filesystem::path& path )
 {   
-    CPath::clean( path );
+    return CPath::clean( path );
 }
 
 bool CBenchmark::generateDYN( const std::filesystem::path& path )
@@ -84,12 +84,13 @@ std::string CBenchmark::report( const std::string& name, EMode mode)
     if( !oResult )
         return "No result obtained from solver.";
 
-    std::string reported = fmt::format( "File {:>5}  |  ", name );
+    std::string reported = fmt::format( "File {:>4}  |  ", name );
     reported += fmt::format( "Mode {:>5}  |  ", modeMap[ mode ] );
-    reported += fmt::format( "N {:>5}  |  ", oResult->listSize );
-    reported += fmt::format( "K {:>5}  |  ", oResult->sumLimit );
-    reported += fmt::format( "Maximum {:>5}  |  ", oResult->maxSum);
+    reported += fmt::format( "Eps {:>2}  |  ", mSolver.getEpsilon() );
+    reported += fmt::format( "N {:>6}  |  ", oResult->listSize );
+    reported += fmt::format( "K {:>8}  |  ", oResult->sumLimit );
+    reported += fmt::format( "Maximum {:>8}  |  ", oResult->maxSum);
     reported += fmt::format( "Diff {:>5}  |  ", oResult->difference);
-    reported += fmt::format( "Time {:>5.3f}  |  ",  oResult->duration );
+    reported += fmt::format( "Time {:>5.5f}\n",  oResult->duration );
     return reported;
 }

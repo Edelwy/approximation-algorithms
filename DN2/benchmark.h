@@ -16,7 +16,7 @@ class CBenchmark {
 
         void setEpsilon( double epsilon );
 
-        bool start( const std::filesystem::path& path );
+        void start( const std::filesystem::path& path );
 
         bool generate( const std::filesystem::path& path );
 
