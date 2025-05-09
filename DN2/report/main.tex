@@ -28,7 +28,7 @@ I chose to implement the algorithms in \cpp because it provides sufficient built
           if( mem > 0 ) 
               return mem;
   
-          const auto& num = numbers.at(i - 1);
+          const auto& num = numbers.at( i - 1 );
           mem = std::max( solver( i - 1, j ), solver( i - 1, j - num ) + num );
           return mem;
       };
@@ -46,14 +46,14 @@ Next algorithm is the \textbf{exhaustive search}. We do not actually add lists t
 
   bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
   {
-      std::set<int> sums = {0};
+      std::set<int> sums = { 0 };
       for ( int i = 1; i < n; i++ ) {
           auto currSums = sums;
   
           for ( const auto element : currSums ) {
-              auto newElement = element + numbers.at(i);
+              auto newElement = element + numbers.at( i );
               if ( newElement <= k )
-                  sums.insert(newElement);
+                  sums.insert( newElement );
           }
       }
       auto solution = *sums.rbegin();
@@ -72,12 +72,12 @@ The implementation of the \textbf{greedy algorithm} is optimized by sorting the 
   bool CSolver::solveGRDY( int n, int k, const std::vector<int>& numbers )
   {
       auto sortedNumbers = numbers;
-      std::sort(sortedNumbers.begin(), sortedNumbers.end());
+      std::sort( sortedNumbers.begin(), sortedNumbers.end() );
   
       int solution = 0;
       for ( int i = 0; i < n; i++ ) {
           const auto& element = sortedNumbers.at( i );
-          if (k - solution >= element )
+          if ( k - solution >= element )
               solution += element;
       }
       auto approx = fmt::format( "Approximation for {} is {}.\n", k, solution );
@@ -95,16 +95,13 @@ Finally we have the \textbf{FPTAS algorithm} which is very similar to the exahus
 
   bool CSolver::solveFPTAS( int n, int k, const std::vector<int>& numbers )
   {
-      auto sortedNumbers = numbers;
-      std::sort(sortedNumbers.begin(), sortedNumbers.end());
-      auto delta = mEpsilon / (2 * n);
-  
-      std::set<int> sums = {0};
+      auto delta = mEpsilon / ( 2 * n );
+      std::set<int> sums = { 0 };
       for ( int i = 1; i < n; i++ ) {
           auto tmpSums = sums;
   
           for ( const auto element : tmpSums ) 
-              sums.insert( element + sortedNumbers.at(i) );
+              sums.insert( element + numbers.at( i ) );
   
           auto last = *sums.begin();
           tmpSums = { last };
@@ -118,7 +115,7 @@ Finally we have the \textbf{FPTAS algorithm} which is very similar to the exahus
       }
   
       auto solution = *sums.rbegin();
-      auto approx = fmt::format( "Approximation for {} is {}. \n", k, solution);
+      auto approx = fmt::format( "Approximation for {} is {}. \n", k, solution );
       approx += fmt::format( "The epsilon value was {}.", mEpsilon );
       approx += fmt::format( "Difference is {}.\n", k - solution );
       std::cout << approx;

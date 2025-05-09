@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <optional>
+#include <filesystem>
 
 enum class EMode {
     DYN =   1,
@@ -11,13 +13,26 @@ enum class EMode {
     FPTAS = 4,
 };
 
+struct CResult {
+    int maxSum;
+    int listSize;
+    int sumLimit;
+    double duration;
+    bool solvable;
+    int difference;
+};
+
 class CSolver {
         double mEpsilon = 0.2;
+        std::optional<CResult> mResult;
+
     public:
         CSolver() = default;
-        CSolver(double epsilon);
+        CSolver( double epsilon );
 
         void setEpsilon( double epsilon );
+
+        std::optional<CResult> result();
 
         bool solve( const std::filesystem::path& path, EMode mode );
     

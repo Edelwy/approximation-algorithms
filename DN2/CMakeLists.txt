@@ -40,7 +40,7 @@ message("FMT library successfully fetched.")
 # Adding executables and adding the external libraries.
 message("Adding DYN Subset Sum Solver executable.")
 add_executable(solver.out 
-    main.cpp 
+    solverCli.cpp 
     options.cpp
     solver.cpp)
 target_link_libraries(solver.out PRIVATE CLI11::CLI11)
