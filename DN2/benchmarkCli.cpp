@@ -9,8 +9,14 @@ int main( int argc, char** argv )
     CBenchmark benchmark;
     if( options.moEpsilon )
         benchmark.setEpsilon( *options.moEpsilon );
-    
-    if ( options.mGenerate > 0 )
-        benchmark.generate( options.mPath, options.mGenerate );
-    benchmark.start( options.mPath );
+
+    if ( options.mbGenerate > 0 )
+        benchmark.generate( options.mPath );
+
+    if ( options.mbEpsilon > 0 )
+        benchmark.startEpsilon( options.mPath );
+    else if ( options.mMode > 0 )
+        benchmark.start( options.mPath, EMode( options.mMode) );
+    else   
+        benchmark.start( options.mPath );
 }

@@ -20,18 +20,20 @@ class CBenchmark {
 
         void start( const std::filesystem::path& path, EMode mode );
 
-        bool generate( const std::filesystem::path& path, int n );
+        void startEpsilon( const std::filesystem::path& path );
+
+        bool generate( const std::filesystem::path& path );
 
         bool clean( const std::filesystem::path& path );
     
     private:
-        bool generateDYN( const std::filesystem::path& path, int n );
+        bool generateDYN( const std::filesystem::path& path );
 
-        bool generateEXH( const std::filesystem::path& path, int n );        
+        bool generateEXH( const std::filesystem::path& path );        
 
-        bool generateGRDY( const std::filesystem::path& path, int n );   
+        bool generateGRDY( const std::filesystem::path& path  );   
 
-        bool generateFPTAS( const std::filesystem::path& path, int n );
+        bool generateFPTAS( const std::filesystem::path& path );
         
         std::string report( const std::string& name, EMode mode );
 

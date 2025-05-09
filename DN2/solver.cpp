@@ -106,8 +106,6 @@ bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
             auto newElement = element + numbers.at( i );
             if ( newElement <= k )
                 sums.insert( newElement );
-            if ( newElement == k)
-                break;
         }
     }
 
@@ -129,7 +127,7 @@ bool CSolver::solveGRDY( int n, int k, const std::vector<int>& numbers )
     timer.start();
 
     auto sortedNumbers = numbers;
-    std::sort( sortedNumbers.begin(), sortedNumbers.end() );
+    std::sort( sortedNumbers.begin(), sortedNumbers.end(), std::greater<int>() );
 
     int solution = 0;
     for ( int i = 0; i < n; i++ ) {
@@ -170,8 +168,6 @@ bool CSolver::solveFPTAS( int n, int k, const std::vector<int>& numbers )
                 tmpSums.insert( element );
                 last = element;
             }
-            if ( element == k)
-                break;
         }
         sums = tmpSums;
     }

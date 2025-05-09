@@ -53,29 +53,41 @@ void CBenchmark::start( const std::filesystem::path& path )
 
 void CBenchmark::start( const std::filesystem::path& path, EMode mode )
 {
-    for ( double eps = 0.0; eps < 3.0001; eps += 0.1 ) {
-        mSolver.setEpsilon( eps );
-
+    if ( CPath::isFile( path ) ) {
+        auto oName = CPath::name( path );
+        if ( !oName )
+            return;
+        mSolver.solve( path, mode );
+        std::cout << report( *oName, mode );
+    }
+    else if ( CPath::isDirectory( path ) ) {
         for ( const auto& path : CPath::paths( path ) ) {
             auto oName = CPath::name( path );
-            if ( !CPath::isFile( path ) || !oName )
+            if ( !oName || !CPath::isFile( path ) )
                 continue;
-
             mSolver.solve( path, mode );
             std::cout << report( *oName, mode );
         }
     }
 }
 
-bool CBenchmark::generate( const std::filesystem::path& path, int n  )
+void CBenchmark::startEpsilon( const std::filesystem::path& path ) 
 {
-    if ( !generateDYN( path, n ) )
+    for ( double eps = 0.1; eps < 3.0001; eps += 0.1 ) {
+        mSolver.setEpsilon( eps );
+        start( path, EMode::FPTAS );
+    }
+}
+
+bool CBenchmark::generate( const std::filesystem::path& path )
+{
+    if ( !generateDYN( path ) )
         return false;
-    if ( !generateEXH( path, n ) )
+    if ( !generateEXH( path ) )
         return false;
-    if ( !generateGRDY( path, n ) )
+    if ( !generateGRDY( path ) )
         return false;
-    if ( !generateFPTAS( path, n ) )
+    if ( !generateFPTAS( path ) )
         return false;
     return true;
 }
@@ -85,10 +97,11 @@ bool CBenchmark::clean( const std::filesystem::path& path )
     return CPath::clean( path );
 }
 
-bool CBenchmark::generateDYN( const std::filesystem::path& path, int n )
+bool CBenchmark::generateDYN( const std::filesystem::path& path )
 {
+    int n = 5000;
     std::vector<int> ones(n, 1);
-    write( path, "1", n, 400, ones );
+    write( path, "1", n, 4000, ones );
 
     int k = 0;
     std::vector<int> numbers;
@@ -101,9 +114,10 @@ bool CBenchmark::generateDYN( const std::filesystem::path& path, int n )
     return true;
 }
 
-bool CBenchmark::generateEXH( const std::filesystem::path& path, int n  )
+bool CBenchmark::generateEXH( const std::filesystem::path& path )
 {
     int k = 0;
+    int n = 25;
     std::vector<int> numbers;
     for ( int i = 0; i < n; i++ ) {
         auto power = std::pow(2, i);
@@ -114,14 +128,28 @@ bool CBenchmark::generateEXH( const std::filesystem::path& path, int n  )
     return true;
 }        
 
-bool CBenchmark::generateGRDY( const std::filesystem::path& path, int n  )
+bool CBenchmark::generateGRDY( const std::filesystem::path& path  )
 {
-    return false;
+    std::vector<int> numbers = { 1, 2000 };
+    write( path, "4", 2, 2000, numbers );
+
+    numbers = { 51, 50, 50 };
+    write( path, "5", 3, 100, numbers );
+
+    return true;
 }   
 
-bool CBenchmark::generateFPTAS( const std::filesystem::path& path, int n  )
+bool CBenchmark::generateFPTAS( const std::filesystem::path& path )
 {
-    return false;
+    int n = 100;
+    std::vector<int> numbers;
+    int k = 200;
+    for (int i = 0; i < 100; ++i) {
+        double element = std::floor( k / ( 1 + mSolver.getEpsilon() * n ) ) + i;
+        numbers.push_back( element );
+    }
+    write( path, "6", 100, k, numbers );
+    return true;
 } 
 
 std::string CBenchmark::report( const std::string& name, EMode mode) 
@@ -132,7 +160,7 @@ std::string CBenchmark::report( const std::string& name, EMode mode)
 
     std::string reported = fmt::format( "File {:>4}  |  ", name );
     reported += fmt::format( "Mode {:>5}  |  ", modeMap[ mode ] );
-    reported += fmt::format( "Eps {:>2}  |  ", mSolver.getEpsilon() );
+    reported += fmt::format( "Eps {:>2.2f}  |  ", mSolver.getEpsilon() );
     reported += fmt::format( "N {:>6}  |  ", oResult->listSize );
     reported += fmt::format( "K {:>8}  |  ", oResult->sumLimit );
     reported += fmt::format( "Maximum {:>8}  |  ", oResult->maxSum);

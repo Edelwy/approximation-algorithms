@@ -38,7 +38,7 @@ I chose to implement the algorithms in \cpp because it provides sufficient built
   }
 \end{minted}
 
-Next algorithm is the \textbf{exhaustive search}. We do not actually add lists together but keep all elements in one set, which in \cpp is sorted by default. One minor improvement from the base algorithm was adding a \textbf{break} sentance if the solution is found.
+Next algorithm is the \textbf{exhaustive search}. We do not actually add lists together but keep all elements in one set, which in \cpp is sorted by default.
 
 \begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
     bgcolor=gray!10, 
@@ -74,7 +74,7 @@ The implementation of the \textbf{greedy algorithm} is optimized by sorting the 
   bool CSolver::solveGRDY( int n, int k, const std::vector<int>& numbers )
   {
       auto sortedNumbers = numbers;
-      std::sort( sortedNumbers.begin(), sortedNumbers.end() );
+      std::sort( sortedNumbers.begin(), sortedNumbers.end(), std::greater<int>() );
   
       int solution = 0;
       for ( int i = 0; i < n; i++ ) {
@@ -89,7 +89,7 @@ The implementation of the \textbf{greedy algorithm} is optimized by sorting the 
   }  
 \end{minted}
 
-Finally, we have the \textbf{FPTAS algorithm} which is very similar to the exahustive search with addition of trimming the set based on the $\epsilon$ parameter. The iteration is stopped if the solution is found.
+Finally, we have the \textbf{FPTAS algorithm} which is very similar to the exahustive search with addition of trimming the set based on the $\epsilon$ parameter.
 
 \begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
     bgcolor=gray!10, 
@@ -178,10 +178,61 @@ The red cells represent the longest running time. The first case was easily solv
 
 \section{Test Case Generation for Hard Scenarios}
 
-Let us concentrate on challenging examples for each algorithm we implemented. To ensure better comparability, we will fix $n$ to $500$. One particularly hard case for dynamic programming arises when the input list consists entirely of very small values, such as \textbf{all ones}. In this situation, the algorithm makes only minimal progress in both the index and sum dimensions. As a result, the algorithm is forced to explore almost the entire $n \times k$ table.
+Let us concentrate on challenging examples for each algorithm we implemented.
 
-Another difficult example for dynamic programming arises when determining that no solution exists in a very large $n \times k$ table, even in trivial cases. Suppose we choose a relatively large $k$ and a list of numbers whose \textbf{total sum is less than} $k$, making it impossible to reach the target. In such cases, the algorithm still allocates the full table and explores many combinations before ultimately concluding that no solution exists. 
+\textbf{Case 1:} One hard case for dynamic programming arises when the input list consists entirely of very small values, such as \textbf{all ones}. In this situation, the algorithm makes only minimal progress in both the index and sum dimensions. As a result, the algorithm is forced to explore almost the entire $n \times k$ table. This is expecially important when $k$ is large. 
 
-Both cases mentioned above are difficult for the \textbf{exahustive search} as well as there rarely any filtering and the list becomes very large. Since we are working with set that should not be an issue. We can modify the second case in a way that every sum of arbitrary elements from the list is unique. We can achieve this by taking powers of $2$ as the initial list, effectively mimicking binary representation.
+\textbf{Case 2:} Another difficult example for dynamic programming arises when determining that no solution exists in a very large $n \times k$ table, even in trivial cases. Suppose we choose a relatively large $k$ and a list of numbers whose \textbf{total sum is less than} $k$, making it impossible to reach the target. In such cases, the algorithm still allocates the full table and explores many combinations before ultimately concluding that no solution exists. 
+
+\textbf{Case 3:} Both cases mentioned above are difficult for the \textbf{exahustive search} as well as there rarely any filtering and the list becomes very large. Since we are working with set that should not be an issue. We can modify the second case in a way that every sum of arbitrary elements from the list is unique. We can achieve this by taking powers of $2$ as the initial list, mimicking binary representation. 
+
+\textbf{Case 4:} Now we discuss cases where approximation algorithms produce very bad results. One such case for the \textbf{greedy algorithm without sorting} would be having just two elements $1$ and $2000$ and $k$ being $2000$ perhaps. The best possible solution would of course be $2000$ however the approximation will be $0$. Just to keep $n$ consistent with the other cases, we will add some padding with zeros. Since we implemented sorting the difference is actually $49$.
+
+\textbf{Case 5:} We can however still find a case where we achieve the \textbf{worst possible value}. If we take the numbers  in the inital list to be $51, 50, 50$ and set $k$ to $100$ we would get $51$ which is a $1$ over half the optimal value. We can generate more generic test cases like this for arbitrary $k$. Take the largest element of the list to be $\lceil \frac{k}{2} \rceil + 1$ and all other elements $\frac{k}{2}$.
+
+\textbf{Case 6:} Since \textbf{FPTAS} only keeps the sum if it is greater than $1 + \frac{\epsilon}{2n}$ we can make the trimming process inefficient by creating elements who are only slightly larger than the previous one, keeping them under this limit. We do this by taking $a_i = \lfloor \frac{k}{n \cdot (1 + \epsilon)} \rfloor + i$ as the $i$-th element in the initial list. 
+
+\begin{figure}[!hbpt]
+    \begin{minipage}{0.6\textwidth}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|l|c|c|c|c|} \hline
+                \cellcolor{blue!20} & \cellcolor{blue!20} &  \multicolumn{4}{c|}{\cellcolor{blue!20}\texttt{time}} \\ \cline{3-6} 
+                \cellcolor{blue!20} & \cellcolor{blue!20}\texttt{parameters} & \texttt{DYN} & \texttt{EXH} & \texttt{GRDY} & \texttt{FPTAS} \\ \hline
+                1 & \makecell[l]{ \texttt{n = 50000} \\ \texttt{k = 45000}} & 0.0181 & 3.254 & 0.001 & 8.022 \\ \hline
+                2 & \makecell[l]{ \texttt{n = 5000} \\ \texttt{k = 103348}} & 0.598 & 95.076 & 0.001 & 209.657 \\ \hline
+                3 & \makecell[l]{ \texttt{n = 25} \\ \texttt{k = 33554432}} & 0.841 & 11.800 & 0.000 & 0.017 \\ \hline
+            \end{tabular}
+            \caption{Time in seconds for the generated test cases.}
+        \end{table} 
+    \end{minipage}
+    \begin{minipage}{0.39\textwidth}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|l|c|c|} \hline
+                \cellcolor{blue!20} & \cellcolor{blue!20} & \multicolumn{2}{c|}{\cellcolor{blue!20}\texttt{difference}} \\ \cline{3-4}
+                \cellcolor{blue!20} & \cellcolor{blue!20} \texttt{test} & \texttt{GRDY} & \texttt{FPTAS} \\ \hline
+                2 & \makecell[l]{ \texttt{n = 2} \\ \texttt{k = 2000}} & 1 & 107 \\ \hline
+                3 & \makecell[l]{ \texttt{n = 2} \\ \texttt{k = 2000}} & 1 & 95764 \\ \hline
+                5 & \makecell[l]{ \texttt{n = 3} \\ \texttt{k = 100}} & 49 & 0 \\ \hline
+                6 & \makecell[l]{ \texttt{n = 100} \\ \texttt{k = 200}} & 0 & 0 \\ \hline
+            \end{tabular}
+            \caption{Difference from $k$.}
+        \end{table} 
+    \end{minipage}
+\end{figure}
+
+Test cases $2$ and $3$ do not have a feasable solution while the rest do.
+
+\section{Epsilon Impact on Runtime}
+
+To test the importance of the $\epsilon$ parameter for the \textbf{FPTAS runtime}, the algorithm was tested on the third public test case. The testing started at $\epsilon$ being $0.0$ and ended with epsilon $3.0$ with the $0.1$ being the increasing step.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{plot.png} 
+    \caption{The Importance of Epsilon for Time Complexity}
+    \label{fig:epsilon_vs_time}
+\end{figure}
 
 \end{document}
