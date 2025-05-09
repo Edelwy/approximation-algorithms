@@ -61,8 +61,8 @@ bool CSolver::solveDYN( int n, int k, const std::vector<int>& numbers )
         if( mem > 0 ) 
             return mem;
 
-        const auto& number = numbers.at(i - 1);
-        mem = std::max( solver( i - 1, j ), solver( i - 1, j - number ) + number );
+        const auto& num = numbers.at(i - 1);
+        mem = std::max( solver( i - 1, j ), solver( i - 1, j - num ) + num );
         return mem;
     };
     auto solution = solver( n, k );

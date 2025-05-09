@@ -1,3 +1,9 @@
 *__pycache__
 *build
 .vscode/
+*.pdf
+*.out
+*.log
+*.aux
+_minted-main
+_deps

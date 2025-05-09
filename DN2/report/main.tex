@@ -1,0 +1,141 @@
+\documentclass[11pt]{article}
+\input{preamble.tex}
+
+\begin{document}
+\maketitle
+
+The entire code can be found on the \href{https://github.com/Edelwy/approximation-algorithms}{\textbf{GitHub repositroy}}. The below mentioned results analyzed and raw can also be found in the repository as well.
+
+\section{Implementation of the Algorithms}
+
+I chose to implement the algorithms in \cpp because it provides sufficient built-in functionality and flexibility, while remaining faster than many other languages. Firstly, here is the implementation of the algorithm used for \textbf{dynamic programming}. The \texttt{memo} table is used for memoization and is initialized to $0$ for every element.
+
+\begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
+               bgcolor=gray!10, 
+               breaklines=true]{cpp}
+
+  bool CSolver::solveDYN( int n, int k, const std::vector<int>& numbers )
+  {
+      std::vector<std::vector<int>> memo( n, std::vector<int>( k, 0 ) );
+      std::function<int( int, int )> solver = [&]( int i, int j ) -> int {
+          if( i < 0 || j < 0 || i > n || j > k )
+              return std::numeric_limits<int>::min();
+  
+          if( i == 0 || j == 0 )
+              return 0;
+  
+          auto& mem = memo.at( i - 1 ).at( j - 1 );
+          if( mem > 0 ) 
+              return mem;
+  
+          const auto& num = numbers.at(i - 1);
+          mem = std::max( solver( i - 1, j ), solver( i - 1, j - num ) + num );
+          return mem;
+      };
+      auto solution = solver( n, k );
+      std::cout << fmt::format( "Solution found was {}.\n", solution );
+      return solution == k;
+  }
+\end{minted}
+
+Next algorithm is the \textbf{exhaustive search}. We do not actually add lists together but keep all elements in one set, which is sorted by default in \cpp standard library implementation. An optimization would be using the \texttt{unordered\_set} and just checking the existance of $k$ in the set at the end. We would, however, lose the information on the maximum sum not exceding $k$ without sorting.
+
+\begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
+    bgcolor=gray!10, 
+    breaklines=true]{cpp}
+
+  bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
+  {
+      std::set<int> sums = {0};
+      for ( int i = 1; i < n; i++ ) {
+          auto currSums = sums;
+  
+          for ( const auto element : currSums ) {
+              auto newElement = element + numbers.at(i);
+              if ( newElement <= k )
+                  sums.insert(newElement);
+          }
+      }
+      auto solution = *sums.rbegin();
+      std::cout << fmt::format( "Maximal element in set is {}.\n", solution );
+      return solution == k;
+  } 
+\end{minted}
+
+\pagebreak
+The implementation of the \textbf{greedy algorithm} is optimized by sorting the numbers array first. If we frame this as a maximization problem, we are searching for the maximum sum not exceding $k$. Then this is a $0.5$-approximation, meaning the approximation is at least half as good as the actual solution.
+
+\begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
+    bgcolor=gray!10, 
+    breaklines=true]{cpp}
+
+  bool CSolver::solveGRDY( int n, int k, const std::vector<int>& numbers )
+  {
+      auto sortedNumbers = numbers;
+      std::sort(sortedNumbers.begin(), sortedNumbers.end());
+  
+      int solution = 0;
+      for ( int i = 0; i < n; i++ ) {
+          const auto& element = sortedNumbers.at( i );
+          if (k - solution >= element )
+              solution += element;
+      }
+      auto approx = fmt::format( "Approximation for {} is {}.\n", k, solution );
+      approx += fmt::format( "Difference is {}.\n", k - solution );
+      std::cout << approx;
+      return solution == k;
+  }  
+\end{minted}
+
+Finally we have the \textbf{FPTAS algorithm} which is very similar to the exahustive search with addition of trimming the list, or the set in our case. The trimming is based on the $\epsilon$ parameter.
+
+\begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
+    bgcolor=gray!10, 
+    breaklines=true]{cpp}
+
+  bool CSolver::solveFPTAS( int n, int k, const std::vector<int>& numbers )
+  {
+      auto sortedNumbers = numbers;
+      std::sort(sortedNumbers.begin(), sortedNumbers.end());
+      auto delta = mEpsilon / (2 * n);
+  
+      std::set<int> sums = {0};
+      for ( int i = 1; i < n; i++ ) {
+          auto tmpSums = sums;
+  
+          for ( const auto element : tmpSums ) 
+              sums.insert( element + sortedNumbers.at(i) );
+  
+          auto last = *sums.begin();
+          tmpSums = { last };
+          for ( auto& element : sums ) {
+              if( element <= k && element > last * ( 1 + delta ) ) {
+                  tmpSums.insert( element );
+                  last = element;
+              }
+          }
+          sums = tmpSums;
+      }
+  
+      auto solution = *sums.rbegin();
+      auto approx = fmt::format( "Approximation for {} is {}. \n", k, solution);
+      approx += fmt::format( "The epsilon value was {}.", mEpsilon );
+      approx += fmt::format( "Difference is {}.\n", k - solution );
+      std::cout << approx;
+      return solution == k;
+  }  
+\end{minted}
+
+All four algorithms are functions of the \texttt{Solver} class. Which algorithm is used is parsed from parameters and decided based on the enum value.
+
+\begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
+    bgcolor=gray!10, 
+    breaklines=true]{cpp}
+  enum class EMode { DYN = 1, EXH = 2, GRDY = 3, FPTAS = 4 };
+\end{minted}
+
+\section{Test Case Generation for Hard Scenarios}
+
+
+
+\end{document}
