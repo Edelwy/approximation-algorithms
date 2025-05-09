@@ -38,7 +38,7 @@ I chose to implement the algorithms in \cpp because it provides sufficient built
   }
 \end{minted}
 
-Next algorithm is the \textbf{exhaustive search}. We do not actually add lists together but keep all elements in one set, which is sorted by default in \cpp standard library implementation. An optimization would be using the \texttt{unordered\_set} and just checking the existance of $k$ in the set at the end. We would, however, lose the information on the maximum sum not exceding $k$ without sorting.
+Next algorithm is the \textbf{exhaustive search}. We do not actually add lists together but keep all elements in one set, which in \cpp is sorted by default. One minor improvement from the base algorithm was adding a \textbf{break} sentance if the solution is found.
 
 \begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
     bgcolor=gray!10, 
@@ -54,6 +54,8 @@ Next algorithm is the \textbf{exhaustive search}. We do not actually add lists t
               auto newElement = element + numbers.at( i );
               if ( newElement <= k )
                   sums.insert( newElement );
+              if ( newElement == k)
+                  break;
           }
       }
       auto solution = *sums.rbegin();
@@ -87,7 +89,7 @@ The implementation of the \textbf{greedy algorithm} is optimized by sorting the 
   }  
 \end{minted}
 
-Finally we have the \textbf{FPTAS algorithm} which is very similar to the exahustive search with addition of trimming the list, or the set in our case. The trimming is based on the $\epsilon$ parameter.
+Finally, we have the \textbf{FPTAS algorithm} which is very similar to the exahustive search with addition of trimming the set based on the $\epsilon$ parameter. The iteration is stopped if the solution is found.
 
 \begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
     bgcolor=gray!10, 
@@ -110,6 +112,8 @@ Finally we have the \textbf{FPTAS algorithm} which is very similar to the exahus
                   tmpSums.insert( element );
                   last = element;
               }
+              if ( element == k)
+                  break;
           }
           sums = tmpSums;
       }
@@ -123,7 +127,7 @@ Finally we have the \textbf{FPTAS algorithm} which is very similar to the exahus
   }  
 \end{minted}
 
-All four algorithms are functions of the \texttt{Solver} class. Which algorithm is used is parsed from parameters and decided based on the enum value.
+Which algorithm is used is parsed from parameters and decided based on the enum value.
 
 \begin{minted}[fontsize=\fontsize{10.5pt}{11pt}, 
     bgcolor=gray!10, 
@@ -174,6 +178,10 @@ The red cells represent the longest running time. The first case was easily solv
 
 \section{Test Case Generation for Hard Scenarios}
 
+Let us concentrate on challenging examples for each algorithm we implemented. To ensure better comparability, we will fix $n$ to $500$. One particularly hard case for dynamic programming arises when the input list consists entirely of very small values, such as \textbf{all ones}. In this situation, the algorithm makes only minimal progress in both the index and sum dimensions. As a result, the algorithm is forced to explore almost the entire $n \times k$ table.
 
+Another difficult example for dynamic programming arises when determining that no solution exists in a very large $n \times k$ table, even in trivial cases. Suppose we choose a relatively large $k$ and a list of numbers whose \textbf{total sum is less than} $k$, making it impossible to reach the target. In such cases, the algorithm still allocates the full table and explores many combinations before ultimately concluding that no solution exists. 
+
+Both cases mentioned above are difficult for the \textbf{exahustive search} as well as there rarely any filtering and the list becomes very large. Since we are working with set that should not be an issue. We can modify the second case in a way that every sum of arbitrary elements from the list is unique. We can achieve this by taking powers of $2$ as the initial list, effectively mimicking binary representation.
 
 \end{document}

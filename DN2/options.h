@@ -10,7 +10,7 @@ class COptions {
         std::filesystem::path mPath;
         std::optional<double> moEpsilon;
         int mMode = 1;
-        bool mGenerate = false;
+        int mGenerate = 0;
 
     private:
         bool parse(const std::string& name, int argc, char** argv);

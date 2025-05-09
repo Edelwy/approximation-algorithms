@@ -106,6 +106,8 @@ bool CSolver::solveEXH( int n, int k, const std::vector<int>& numbers )
             auto newElement = element + numbers.at( i );
             if ( newElement <= k )
                 sums.insert( newElement );
+            if ( newElement == k)
+                break;
         }
     }
 
@@ -168,6 +170,8 @@ bool CSolver::solveFPTAS( int n, int k, const std::vector<int>& numbers )
                 tmpSums.insert( element );
                 last = element;
             }
+            if ( element == k)
+                break;
         }
         sums = tmpSums;
     }

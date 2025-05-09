@@ -10,7 +10,7 @@ int main( int argc, char** argv )
     if( options.moEpsilon )
         benchmark.setEpsilon( *options.moEpsilon );
     
-    if ( options.mGenerate )
-        benchmark.generate( options.mPath );
+    if ( options.mGenerate > 0 )
+        benchmark.generate( options.mPath, options.mGenerate );
     benchmark.start( options.mPath );
 }
