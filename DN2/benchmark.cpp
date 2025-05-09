@@ -40,6 +40,22 @@ void CBenchmark::start( const std::filesystem::path& path )
     }
 }
 
+void CBenchmark::start( const std::filesystem::path& path, EMode mode )
+{
+    for ( double eps = 0.0; eps < 3.0001; eps += 0.1 ) {
+        mSolver.setEpsilon( eps );
+        
+        for ( const auto& path : CPath::paths( path ) ) {
+            auto oName = CPath::name( path );
+            if ( !CPath::isFile( path ) || !oName )
+                continue;
+
+            mSolver.solve( path, mode );
+            std::cout << report( *oName, mode );
+        }
+    }
+}
+
 bool CBenchmark::generate( const std::filesystem::path& path )
 {
     if ( !generateDYN( path ) )

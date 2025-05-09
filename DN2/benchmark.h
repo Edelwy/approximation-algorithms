@@ -18,6 +18,8 @@ class CBenchmark {
 
         void start( const std::filesystem::path& path );
 
+        void start( const std::filesystem::path& path, EMode mode );
+
         bool generate( const std::filesystem::path& path );
 
         bool clean( const std::filesystem::path& path );
