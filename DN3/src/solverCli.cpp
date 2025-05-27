@@ -15,7 +15,8 @@ int main( int argc, char** argv ) {
     std::string reported = fmt::format( "Name {:>7}  |  ", oResult->mName );
     reported += fmt::format( "V {:>6}  |  ", oResult->mSizeV );
     reported += fmt::format( "E {:>6}  |  ", oResult->mSizeE );
-    reported += fmt::format( "Minimum {:>8}  |  ", oResult->mMinimum);
+    reported += fmt::format( "Solution {:>8}  |  ", oResult->mSolution);
+    reported += fmt::format( "Optimum {:>8}  |  ", oResult->mOptimum);
     reported += fmt::format( "Iterations {:>5}\n",  oResult->mIterations );
     std::cout << reported;
 }
