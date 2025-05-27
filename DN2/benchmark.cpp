@@ -100,7 +100,7 @@ bool CBenchmark::clean( const std::filesystem::path& path )
 bool CBenchmark::generateDYN( const std::filesystem::path& path )
 {
     int n = 5000;
-    std::vector<int> ones(n, 1);
+    std::vector<int> ones( n, 1 );
     write( path, "1", n, 4000, ones );
 
     int k = 0;
@@ -141,14 +141,11 @@ bool CBenchmark::generateGRDY( const std::filesystem::path& path  )
 
 bool CBenchmark::generateFPTAS( const std::filesystem::path& path )
 {
-    int n = 100;
-    std::vector<int> numbers;
-    int k = 200;
-    for (int i = 0; i < 100; ++i) {
-        double element = std::floor( k / ( 1 + mSolver.getEpsilon() * n ) ) + i;
-        numbers.push_back( element );
-    }
-    write( path, "6", 100, k, numbers );
+    int k = 100;
+    int n = 20;
+    std::vector<int> numbers( n, 1 );
+    numbers.push_back( k );
+    write( path, "6", n + 1, k, numbers );
     return true;
 } 
 
@@ -172,7 +169,10 @@ std::string CBenchmark::report( const std::string& name, EMode mode)
 bool CBenchmark::write( const std::filesystem::path& path, 
     const std::string& name, int n, int k, std::vector<int> numbers) 
 {
-    std::ofstream fout( path / fmt::format( "{}.txt", name ) );
+    std::filesystem::path filePath = path;
+    if ( CPath::isDirectory( path ) )
+        filePath = path / fmt::format( "{}.txt", name );
+    std::ofstream fout( filePath );
     if( !fout ) 
         return false;
 
