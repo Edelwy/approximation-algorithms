@@ -1,0 +1,32 @@
+Here are the results of 7 different batch tests run with the 'test.sh' script and analyized averages with
+the 'iterations.csv' and 'iterations.py' files. The limit on the number of iterations was 60. Some tests
+did not produce a solution and maxed out on 60 in some of the 7 trials - mostly test 12 as can be seen from
+the average. However, all solutions were found if taking all trials time iterations into account.
+
+Using the 'harary.py' script I generated a graph that is difficult to solve using a small number of iterations.
+The graph generated is a Harary graph for 3-connectivity and 500 vertices. Harary graphs are known for being on
+the limit of 3-connectivity, meaning taking a single edge would make the graph 2-connected.
+Therefore, this is exactly what I did. I removed one edge, obtaining 498 vertices where removing incident edges
+creates a 3-cut and exactly 2 vertices with a 2-cut. This is difficult to solve as the algorithm
+has to preserve the exact 3 edges (or 6 as there are 2 options) among the 749 in order to find the min-cut.
+We can see that this graph is fairly small, I could've made it a lot larger which would increase the difficulty
+and it still performs really badly. It only found a solution in 2 trials, the other 5 maxed out on 60.
+
+Name     g01  |  V    200  |  E   6022  |  Solution       20  |  Optimum       20  |  Iterations    6.000
+Name     g02  |  V    200  |  E   6955  |  Solution       30  |  Optimum       30  |  Iterations    13.286
+Name     g03  |  V   1000  |  E 124777  |  Solution       30  |  Optimum       30  |  Iterations    1.857
+Name     g04  |  V   1400  |  E 342305  |  Solution       17  |  Optimum       17  |  Iterations    1.571
+Name     g05  |  V   1400  |  E 342204  |  Solution       42  |  Optimum       42  |  Iterations    1.571
+Name     g06  |  V   2000  |  E 699036  |  Solution       77  |  Optimum       77  |  Iterations    2.857
+Name     g07  |  V   4000  |  E 360300  |  Solution       77  |  Optimum       77  |  Iterations    32.714
+Name     g08  |  V   4000  |  E 320205  |  Solution       50  |  Optimum       50  |  Iterations    12.286
+Name     g09  |  V   5000  |  E 625780  |  Solution       99  |  Optimum       99  |  Iterations    32.714
+Name     g10  |  V   5200  |  E  67279  |  Solution        8  |  Optimum        8  |  Iterations    29.571
+Name     g11  |  V   5200  |  E  67733  |  Solution       10  |  Optimum       10  |  Iterations    37.571
+Name     g12  |  V   6000  |  E  89726  |  Solution       11  |  Optimum       11  |  Iterations    52.143
+Name     g13  |  V   6200  |  E  96068  |  Solution       12  |  Optimum       12  |  Iterations    24.000
+Name  harary  |  V    500  |  E    749  |  Solution        2  |  Optimum        2  |  Iterations    46.286
+
+The entire project is available as a 'min-cut.zip' file with all of the tests and generating scripts. It is
+implemented as a cpp project as I figured it should work slightly faster, using the boost library. 
+The implementation is in the 'src' folder.
