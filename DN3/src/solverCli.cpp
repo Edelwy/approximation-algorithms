@@ -6,7 +6,7 @@
 int main( int argc, char** argv ) {
     COptions options( "Solver", argc, argv );
     CSolver solver;
-    auto solution = solver.solve( options.mPath, 30 );
+    auto solution = solver.solve( options.mPath, options.mLimit );
 
     auto oResult = solver.result();
     if( !solution || !oResult )

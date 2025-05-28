@@ -48,7 +48,6 @@ add_executable(solver.out
     solverCli.cpp 
     options.cpp
     solver.cpp
-    timer.cpp
     path.cpp)
 target_link_libraries(solver.out PRIVATE CLI11::CLI11)
 target_link_libraries(solver.out PRIVATE fmt::fmt)

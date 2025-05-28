@@ -1,0 +1,14 @@
+Name     g01  |  V    200  |  E   6022  |  Solution       20  |  Optimum       20  |  Iterations     1
+Name     g02  |  V    200  |  E   6955  |  Solution       30  |  Optimum       30  |  Iterations    14
+Name     g03  |  V   1000  |  E 124777  |  Solution       30  |  Optimum       30  |  Iterations     2
+Name     g04  |  V   1400  |  E 342305  |  Solution       17  |  Optimum       17  |  Iterations     3
+Name     g05  |  V   1400  |  E 342204  |  Solution       42  |  Optimum       42  |  Iterations     1
+Name     g06  |  V   2000  |  E 699036  |  Solution       77  |  Optimum       77  |  Iterations     3
+Name     g07  |  V   4000  |  E 360300  |  Solution       77  |  Optimum       77  |  Iterations    54
+Name     g08  |  V   4000  |  E 320205  |  Solution       50  |  Optimum       50  |  Iterations    12
+Name     g09  |  V   5000  |  E 625780  |  Solution       99  |  Optimum       99  |  Iterations    10
+Name     g10  |  V   5200  |  E  67279  |  Solution        8  |  Optimum        8  |  Iterations    58
+Name     g11  |  V   5200  |  E  67733  |  Solution       10  |  Optimum       10  |  Iterations     9
+Name     g12  |  V   6000  |  E  89726  |  Solution       16  |  Optimum       11  |  Iterations    60
+Name     g13  |  V   6200  |  E  96068  |  Solution       12  |  Optimum       12  |  Iterations     4
+Name  harary  |  V    500  |  E    749  |  Solution        2  |  Optimum        2  |  Iterations     4
