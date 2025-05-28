@@ -38,31 +38,29 @@ bool CSolver::solve( const std::filesystem::path& path, int maxIterations )
     auto minimum = sizeE;
     int iteration = 1;
     while( iteration <= maxIterations ) {
+        iteration++;
         std::vector<int> rank( sizeV );
         std::vector<int> parent( sizeV );
 
         boost::disjoint_sets<int*, int*> ds(&rank[0], &parent[0]);
-        for (int v = 0; v < sizeV; ++v)
-            ds.make_set(v);
-
-        std::vector<edge_t> shuffledEdges = edges;
-        std::shuffle( shuffledEdges.begin(), shuffledEdges.end(), gen );
+        for( int v = 0; v < sizeV; v++ )
+            ds.make_set( v );
 
         int components = sizeV;
-        for( const auto& e : shuffledEdges ) {
+        std::uniform_int_distribution<> dis(0, edges.size() - 1);
+        while( components > 2 ) {
+            const edge_t& e = edges[dis(gen)];
             int u = boost::source( e, graph );
             int v = boost::target( e, graph );
 
             if( ds.find_set( u ) != ds.find_set( v ) ) {
-                if( components <= 2 ) 
-                    break;
                 ds.union_set( u, v );
                 components--;
             }
         }
 
         int cutCount = 0;
-        for( const auto& e : shuffledEdges ) {
+        for( const auto& e : edges ) {
             int u = source( e, graph );
             int v = target( e, graph );
             if( ds.find_set( u ) != ds.find_set( v ) ) 
@@ -70,8 +68,6 @@ bool CSolver::solve( const std::filesystem::path& path, int maxIterations )
         }
 
         minimum = std::min(minimum, cutCount);
-
-        iteration++;
         if( opt == minimum )
             break;
     }
@@ -125,6 +121,5 @@ graph_t CSolver::parse( const std::filesystem::path& path )
     graph_t graph;
     while ( infile >> v1 >> v2 ) 
         boost::add_edge( v1, v2, 1, graph );
-
     return graph;
 }
